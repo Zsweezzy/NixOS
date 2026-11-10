@@ -96,9 +96,6 @@
     staged = ""
     renamed = ""
     deleted = ""
-    typechanged = ""
-    worktree_added = ""
-    worktree_deleted = ""
     ignore_submodules = false
 
     [nodejs]
