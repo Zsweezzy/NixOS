@@ -1,39 +1,168 @@
-# home.nix — Home Manager configuration with embedded starship config
+# home.nix — Home Manager configuration for user "maxii"
 #
-# Usage:
-#   home-manager switch
+# Rebuilt from ~/Backups/nix-2026-10-17/home.nix (the prior working config),
+# adapted to the channel-based install: stateVersion bumped 24.05 → 25.11.
 #
-# For a fresh NixOS install:
-#   1. Clone this repo to /etc/nixos/ (or ~/.config/nixpkgs/)
-#   2. Run: home-manager switch
-#
-# This writes starship.toml directly via home.file to preserve TOML syntax
+# Apply with:   home-manager switch
+# Update with:   nix-channel --update && home-manager switch
 
 { config, pkgs, ... }:
 
 {
-  ##################################################################
-  # Identity
-  ##################################################################
+  # ---------------------------------------------------------------- identity --
   home.username = "maxii";
   home.homeDirectory = "/home/maxii";
+
+  # HM 25.11 requires this; it also pins the module-system version used for
+  # option migrations. Bumped from 24.05 to match the installed release.
   home.stateVersion = "25.11";
 
-  ##################################################################
-  # Packages
-  ##################################################################
+  # In standalone mode the backup flag is a CLI option, not a config option:
+#   home-manager switch -b backup
+# It moves any file a module would clobber to <name>.backup before writing.
+
+  # ------------------------------------------------------------- packages --
+  # Packages installed into the user profile (nix-env default path).
+  # GUI/GL apps intentionally NOT here: Nix-built GL binaries cannot
+  # initialize EGL against the system Mesa/AMD drivers on non-NixOS (verified:
+  # `kitty` from the nix store errors with "EGL: Failed to initialize EGL"). It stays on pacman,
+  # where it uses the system driver stack. See the home.packages comment
+  # above for the same reason GUI/GL apps are excluded.
   home.packages = with pkgs; [
+    # --- core utils ---
+    lsd
+    bat
+    eza
+    fd
+    fzf
+    ripgrep
+    jq
+    yq-go
+    zoxide
+    # --- shell ---
+    atuin
+    direnv
+    zsh
     fish
+    nushell
+    bash-completion
+    # --- editors ---
+    neovim
+    helix
+    micro
+    # --- dev tooling ---
+    git
+    gh
+    lazygit
+    gitui
+    nodejs
+    bun
+    python3
+    uv
+    pipx
+    rustup
+    go
+    clang
+    cmake
+    pkg-config
+    ninja
+    meson
+    just
+    gnumake
+    shellcheck
+    shfmt
+    # --- formatters ---
+    nixfmt
+    alejandra
+    taplo
+    stylua
+    biome
+    prettier
+    sd
+    # --- misc ---
+    bottom
+    btop
+    dust
+    procs
+    htop
+    fastfetch
+    hyfetch
+    tree
+    wget
+    curl
+    unzip
+    p7zip
+    zip
+    tmux
+    zellij
+    tokei
+    hyperfine
+    tealdeer
+    glow
+    cht-sh
+    doggo
+    xh
+    httpie
+    delta
+    difftastic
+    rsync
+    openssl
+    age
+    sops
+    gnupg
+    pinentry-curses
+    pciutils
+    usbutils
+    lsof
+    killall
+    ncdu
+    dua
+    yt-dlp
+    ffmpeg-full
+    ffmpegthumbnailer
+    imagemagick
+    yazi
+    duf
+    cbonsai
+    cmatrix
+    glances
+    hwinfo
+    strace
+    pv
+    less
+    nano
+    playerctl
+    brightnessctl
+    wl-clipboard
+    cliphist
+    grim
+    slurp
+    poppler-utils
+    tesseract
+    lshw
+    dmidecode
+    file
+    which
+    wdiff
+    colordiff
+    icdiff
   ];
 
-  ##################################################################
-  # Programs
-  ##################################################################
+  # ------------------------------------------------- home.file / programs --
+  # programs.*.enable = true modules write their own config files.
+  # home.file.<path>.source copies a file into $HOME verbatim.
+
   programs.home-manager.enable = true;
-  programs.starship.enable = true;
-  programs.starship.enableFishIntegration = true;
+  programs.direnv.enable = true;
+  programs.direnv.nix-direnv.enable = true;
+  programs.atuin.enable = true;
+  programs.zoxide.enable = true;
+  programs.fzf.enable = true;
+  programs.bat.enable = true;
+  programs.eza.enable = true;
 
   # Starship TOML config - written directly to preserve TOML syntax
+  # (programs.starship.settings JSON-to-TOML conversion double-escapes format strings)
   home.file.".config/starship.toml".text = ''
     # Generated: Tokyo Night theme - catppuccin-style transition wedges
     # Segments: session / path / git / node / time (left), aws (right)
@@ -43,24 +172,24 @@
     #  - node shows the  (engine) icon instead of the package-manager icon
 
     format = """
-    [❮](#1a1b26)\
+    [](#82aaff)\
     $username\
-    [❯](#bb9af7 bg:#1a1b26)\
+    [](#82aaff bg:#bb9af7)\
     $directory\
-    [❯](#9ece6a bg:#bb9af7)\
+    [](#bb9af7 bg:#9ece6a)\
     $git_branch\
     $git_status\
-    [❯](#9ece6a bg:#9ece6a)\
+    [](#9ece6a bg:#9ece6a)\
     $nodejs\
-    [❯](#f7768e bg:#9ece6a)\
+    [](#9ece6a bg:#f7768e)\
     $time\
-    [❯ ](#f7768e)\
+    [ ](#f7768e)\
     """
 
-    right_format = "$aws"
+    right_format = '$aws'
 
     [aws]
-    format = "[❯](#1a1b26)[ $symbol$profile(@$region) ]($style)[❯](#1a1b26)"
+    format = '[❯](#1a1b26)[ $symbol$profile(@$region) ]($style)[❯](#1a1b26)'
     symbol = ""
     style = "bg:#1a1b26 fg:#82aaff"
 
@@ -109,4 +238,14 @@
     time_format = "%R"
     style = "bg:#f7768e fg:#1a1b26"
   '';
+
+  # Enable starship for fish shells
+  programs.starship.enable = true;
+  programs.starship.enableFishIntegration = true;
+
+  # Kitty is NOT here. Nixpkgs' kitty fails EGL initialization against the
+  # system Mesa/AMD drivers on non-NixOS (verified: `kitty` from the nix
+  # store errors with "EGL: Failed to initialize EGL"). It stays on pacman,
+  # where it uses the system driver stack. See the home.packages comment
+  # above for the same reason GUI/GL apps are excluded.
 }
