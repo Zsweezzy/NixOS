@@ -5,7 +5,7 @@ Home Manager configuration with embedded starship.toml.
 ## Quick Start
 
 ```bash
-# Clone to /etc/nixos/ or ~/.config/nixpkgs/
+# Clone to ~/.config/nixpkgs/ or ~/projects/ZSW-NixOS/
 git clone https://github.com/Zsweezzy/NixOS.git ~/.config/nixpkgs/
 
 # Apply the configuration
