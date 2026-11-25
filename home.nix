@@ -1,7 +1,10 @@
 { pkgs, lib, ... }:
 
 {
-  imports = [ ./config/kitty.nix ];
+  imports = [
+    ./config/kitty.nix
+    ./config/starship.nix
+  ];
 
   # ---------------------------------------------------------------- identity --
   home.username = "maxii";
@@ -27,10 +30,6 @@
   ];
 
   # ----------------------------------------------------------------- config --
-  # The TOML ships verbatim: programs.starship.settings re-serializes it and
-  # mangles the format strings (verified on C3PO).
-  home.file.".config/starship.toml".source = ./config/starship.toml;
-
   # LazyVim rewrites lazy-lock.json inside the config dir, so it cannot be a
   # read-only store symlink; copy the tree in on every activation instead.
   home.activation.nvimConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
