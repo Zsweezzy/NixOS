@@ -18,7 +18,7 @@ with the user-facing config split into `config/*.nix`.
 | `config/plasma.nix` | plasma theme, panel, wallpaper, Ctrl+Alt+T |
 | `config/apps.nix` | fastfetch, btop, bottom, mpv configs |
 | `config/hyprland.nix` | hypr, waybar, rofi, quickshell configs |
-| `config/` | raw assets: nvim, Plasma theme, GTK theme, fish, hypr, waybar, rofi, quickshell |
+| `config/` | raw assets: nvim, Plasma theme, GTK theme, YAMIS icons, fish, hypr, waybar, rofi, quickshell |
 | `MISSING.md` | what CachyOS has that this flake deliberately does not |
 
 ## Apply
