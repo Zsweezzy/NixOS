@@ -10,7 +10,6 @@ Flake-based NixOS 26.05 config: system layer + home-manager + plasma-manager.
 | `configuration.nix` | boot, kernel, KDE Plasma, users, pipewire, sshd, fonts, shell starship hook |
 | `hardware-configuration.nix` | this machine's disks (VM) |
 | `home.nix` | user packages, kitty, starship TOML, neovim, Ctrl+Alt+T shortcut |
-| `files/kitty.conf` | kitty config, theme inlined |
 | `files/starship.toml` | starship config, shipped verbatim |
 | `files/nvim/` | LazyVim config, copied into `~/.config/nvim` on activation |
 
