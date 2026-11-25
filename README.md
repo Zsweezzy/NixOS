@@ -9,9 +9,11 @@ Flake-based NixOS 26.05 config: system layer + home-manager + plasma-manager.
 | `flake.nix` | Inputs (nixpkgs 26.05, home-manager 26.05, plasma-manager) and the `nixos` host |
 | `configuration.nix` | boot, kernel, KDE Plasma, users, pipewire, sshd, fonts, shell starship hook |
 | `hardware-configuration.nix` | this machine's disks (VM) |
-| `home.nix` | user packages, neovim, Ctrl+Alt+T shortcut, module imports |
+| `home.nix` | user packages, neovim, module imports |
 | `config/kitty.nix` | kitty: font, window size, Tokyo Night Moon palette |
 | `config/starship.nix` | starship prompt: Tokyo Night Moon segments |
+| `config/plasma.nix` | Plasma: colours, icons, cursor, decorations, wallpaper, panel, Ctrl+Alt+T |
+| `config/plasma/` | theme assets: TokyoNightMoon colours, Monochrome theme/LnF/aurorae, wallpaper |
 | `config/nvim/` | LazyVim config, copied into `~/.config/nvim` on activation |
 
 ## Apply
@@ -37,6 +39,12 @@ sudo nixos-rebuild switch --flake /etc/nixos#nixos
   stay byte-exact — an editor that strips them silently breaks the wedges.
 - `config/nvim/` is rsynced rather than symlinked because LazyVim rewrites
   `lazy-lock.json` inside the config dir.
+- Plasma themes are applied by plasma-manager's autostart script on login, not at
+  activation: `~/.local/share/plasma-manager/run_all.sh` applies colours, icons,
+  cursor and the panel/wallpaper desktop scripts. Run it by hand to re-apply
+  without logging out (needs `XAUTHORITY`, not just `DISPLAY`).
+- The Monochrome global theme wants the Kvantum widget style; only its colour
+  scheme, Plasma style, aurorae decoration and splash are used here.
 - Ctrl+Alt+T needs a logout/login: KWin registers global shortcuts at start.
 - Fonts and the starship bash hook stay system-wide; everything user-facing is
   in home-manager.
