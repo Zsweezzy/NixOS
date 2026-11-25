@@ -1,0 +1,11 @@
+{
+  "dnd": false,
+  "mutedApps": [],
+  "groupNotifications": true,
+  "osdEnabled": true,
+  "lockIdleMinutes": 10,
+  "dpmsIdleMinutes": 5,
+  "lockGraceSeconds": 0,
+  "batteryPill": true,
+  "lowPower": false
+}

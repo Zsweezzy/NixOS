@@ -1,0 +1,38 @@
+import QtQuick
+import Quickshell
+
+// Instantiates each flyout offscreen. Panels are only created when opened, so
+// a QML error in one stays invisible until someone clicks it. The control
+// centre embeds ClockPanel, MediaPanel and AudioPanel, so those are created
+// here directly: the flyout is the only place they exist now.
+ShellRoot {
+    Clock { id: clock }
+    Audio { id: audio }
+    Media { id: media }
+    Quick { id: quick }
+
+    function report(name, item) {
+        if (item === null) {
+            print(name + "=NULL")
+            return
+        }
+        print(name + "=" + item.implicitWidth + "x" + item.implicitHeight)
+        item.destroy()
+    }
+
+    Component { id: clockPanel; ClockPanel {} }
+    Component { id: audioPanel; AudioPanel {} }
+    Component { id: mediaPanel; MediaPanel {} }
+    Component { id: notifPanel; NotificationsPanel {} }
+    Component { id: audioCard; AudioCard {} }
+
+    Component.onCompleted: {
+        report("clock", clockPanel.createObject(this))
+        report("audio", audioPanel.createObject(this))
+        report("media", mediaPanel.createObject(this))
+        report("quick", quick.panel.createObject(this))
+        report("notifications", notifPanel.createObject(this))
+        report("audiocard", audioCard.createObject(this))
+        Qt.quit()
+    }
+}
