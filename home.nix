@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 
 {
-  imports = [ ./kitty.nix ];
+  imports = [ ./config/kitty.nix ];
 
   # ---------------------------------------------------------------- identity --
   home.username = "maxii";
@@ -29,13 +29,13 @@
   # ----------------------------------------------------------------- config --
   # The TOML ships verbatim: programs.starship.settings re-serializes it and
   # mangles the format strings (verified on C3PO).
-  home.file.".config/starship.toml".source = ./files/starship.toml;
+  home.file.".config/starship.toml".source = ./config/starship.toml;
 
   # LazyVim rewrites lazy-lock.json inside the config dir, so it cannot be a
   # read-only store symlink; copy the tree in on every activation instead.
   home.activation.nvimConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     run mkdir -p "$HOME/.config/nvim"
-    run ${pkgs.rsync}/bin/rsync -a --delete ${./files/nvim}/ "$HOME/.config/nvim/"
+    run ${pkgs.rsync}/bin/rsync -a --delete ${./config/nvim}/ "$HOME/.config/nvim/"
   '';
 
   # ---------------------------------------------------------------- plasma --

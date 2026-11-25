@@ -10,9 +10,9 @@ Flake-based NixOS 26.05 config: system layer + home-manager + plasma-manager.
 | `configuration.nix` | boot, kernel, KDE Plasma, users, pipewire, sshd, fonts, shell starship hook |
 | `hardware-configuration.nix` | this machine's disks (VM) |
 | `home.nix` | user packages, starship TOML, neovim, Ctrl+Alt+T shortcut |
-| `kitty.nix` | kitty: font, window size, Tokyo Night Moon palette |
-| `files/starship.toml` | starship config, shipped verbatim |
-| `files/nvim/` | LazyVim config, copied into `~/.config/nvim` on activation |
+| `config/kitty.nix` | kitty: font, window size, Tokyo Night Moon palette |
+| `config/starship.toml` | starship config, shipped verbatim |
+| `config/nvim/` | LazyVim config, copied into `~/.config/nvim` on activation |
 
 ## Apply
 
@@ -32,9 +32,9 @@ sudo nixos-rebuild switch --flake /etc/nixos#nixos
 
 ## Notes
 
-- `files/starship.toml` is a file, not `programs.starship.settings`: the settings
+- `config/starship.toml` is a file, not `programs.starship.settings`: the settings
   path re-serializes the TOML and mangles the `format` strings.
-- `files/nvim/` is rsynced rather than symlinked because LazyVim rewrites
+- `config/nvim/` is rsynced rather than symlinked because LazyVim rewrites
   `lazy-lock.json` inside the config dir.
 - Ctrl+Alt+T needs a logout/login: KWin registers global shortcuts at start.
 - Fonts and the starship bash hook stay system-wide; everything user-facing is
@@ -43,4 +43,4 @@ sudo nixos-rebuild switch --flake /etc/nixos#nixos
 ## Another machine
 
 Add `hosts/<name>/hardware-configuration.nix` plus a `nixosConfigurations.<name>`
-entry in `flake.nix`, and point its `home.nix` at the same `files/`.
+entry in `flake.nix`, and point its `home.nix` at the same `config/`.
