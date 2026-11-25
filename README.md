@@ -9,7 +9,8 @@ Flake-based NixOS 26.05 config: system layer + home-manager + plasma-manager.
 | `flake.nix` | Inputs (nixpkgs 26.05, home-manager 26.05, plasma-manager) and the `nixos` host |
 | `configuration.nix` | boot, kernel, KDE Plasma, users, pipewire, sshd, fonts, shell starship hook |
 | `hardware-configuration.nix` | this machine's disks (VM) |
-| `home.nix` | user packages, kitty, starship TOML, neovim, Ctrl+Alt+T shortcut |
+| `home.nix` | user packages, starship TOML, neovim, Ctrl+Alt+T shortcut |
+| `kitty.nix` | kitty: font, window size, Tokyo Night Moon palette |
 | `files/starship.toml` | starship config, shipped verbatim |
 | `files/nvim/` | LazyVim config, copied into `~/.config/nvim` on activation |
 

@@ -1,6 +1,8 @@
 { pkgs, lib, ... }:
 
 {
+  imports = [ ./kitty.nix ];
+
   # ---------------------------------------------------------------- identity --
   home.username = "maxii";
   home.homeDirectory = "/home/maxii";
@@ -25,43 +27,6 @@
   ];
 
   # ----------------------------------------------------------------- config --
-  programs.kitty = {
-    enable = true;
-    font = {
-      name = "JetBrainsMono Nerd Font";
-      size = 11;
-    };
-    settings = {
-      remember_window_size = false;
-      initial_window_width = 1300;
-      initial_window_height = 700;
-
-      # Tokyo Night Moon
-      background = "#222436";
-      foreground = "#c8d3f5";
-      selection_background = "#2d3f76";
-      selection_foreground = "#c8d3f5";
-      cursor = "#c8d3f5";
-      cursor_text_color = "#222436";
-      color0 = "#1b1d2b";
-      color1 = "#ff757f";
-      color2 = "#c3e88d";
-      color3 = "#ffc777";
-      color4 = "#82aaff";
-      color5 = "#c099ff";
-      color6 = "#86e1fc";
-      color7 = "#828bb8";
-      color8 = "#444a73";
-      color9 = "#ff8d94";
-      color10 = "#c7fb6d";
-      color11 = "#ffd8ab";
-      color12 = "#9ab8ff";
-      color13 = "#caabff";
-      color14 = "#b2ebff";
-      color15 = "#c8d3f5";
-    };
-  };
-
   # The TOML ships verbatim: programs.starship.settings re-serializes it and
   # mangles the format strings (verified on C3PO).
   home.file.".config/starship.toml".source = ./files/starship.toml;
