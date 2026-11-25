@@ -4,10 +4,10 @@
   # Theme assets live next to this file; home-manager links them into the
   # per-user XDG dirs that Plasma scans.
   home.file = {
-    ".local/share/color-schemes/TokyoNightMoon.colors".source = ../../config/plasma/TokyoNightMoon.colors;
-    ".local/share/plasma/desktoptheme/Monochrome".source = ../../config/plasma/desktoptheme/Monochrome;
-    ".local/share/plasma/look-and-feel/Monochrome".source = ../../config/plasma/look-and-feel/Monochrome;
-    ".local/share/aurorae/themes/Monochrome".source = ../../config/plasma/aurorae/Monochrome;
+    ".local/share/color-schemes/TokyoNightMoon.colors".source = ./plasma/TokyoNightMoon.colors;
+    ".local/share/plasma/desktoptheme/Monochrome".source = ./plasma/desktoptheme/Monochrome;
+    ".local/share/plasma/look-and-feel/Monochrome".source = ./plasma/look-and-feel/Monochrome;
+    ".local/share/aurorae/themes/Monochrome".source = ./plasma/aurorae/Monochrome;
 
     # Ctrl+Alt+T -> kitty. KGlobalAccel only picks up .desktop files that opt
     # in as command shortcuts, hence the flag. (home.file, not
@@ -31,7 +31,7 @@
   # The exact GTK theme from C3PO (~/.local/share/themes), not the nixpkgs
   # Tokyonight-Dark, so GTK apps match the Plasma palette.
   home.file.".local/share/themes/Tokyonight-Dark-Moon".source =
-    ../../config/gtk/themes/Tokyonight-Dark-Moon;
+    ./gtk/themes/Tokyonight-Dark-Moon;
 
   # GTK apps follow the same palette; Plasma drives the Qt side.
   gtk = {
@@ -72,7 +72,7 @@
         theme = "__aurorae__svg__Monochrome";
       };
       splashScreen.theme = "Monochrome";
-      wallpaper = ../../config/plasma/wallpaper.jpg;
+      wallpaper = ./plasma/wallpaper.jpg;
       wallpaperFillMode = "preserveAspectCrop";
     };
 

@@ -1,5 +1,5 @@
 {
-  description = "ZSW NixOS — flake, hosts and shared modules";
+  description = "ZSW NixOS — system + home-manager, pinned";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
@@ -17,35 +17,21 @@
   };
 
   outputs =
+    { nixpkgs, home-manager, plasma-manager, ... }:
     {
-      nixpkgs,
-      home-manager,
-      plasma-manager,
-      ...
-    }:
-    let
-      mkHost =
-        host:
-        nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            ./hosts/${host}
+      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+        modules = [
+          ./configuration.nix
 
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.backupFileExtension = "backup";
-              home-manager.sharedModules = [ plasma-manager.homeModules.plasma-manager ];
-              home-manager.users.maxii = import ./users/maxii.nix;
-            }
-          ];
-        };
-    in
-    {
-      nixosConfigurations = {
-        nixos = mkHost "vm";
-        # c3po = mkHost "c3po";
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "backup";
+            home-manager.sharedModules = [ plasma-manager.homeModules.plasma-manager ];
+            home-manager.users.maxii = import ./home.nix;
+          }
+        ];
       };
     };
 }
