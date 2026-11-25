@@ -1,251 +1,64 @@
-# home.nix — Home Manager configuration for user "maxii"
-#
-# Rebuilt from ~/Backups/nix-2026-10-17/home.nix (the prior working config),
-# adapted to the channel-based install: stateVersion bumped 24.05 → 25.11.
-#
-# Apply with:   home-manager switch
-# Update with:   nix-channel --update && home-manager switch
-
-{ config, pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   # ---------------------------------------------------------------- identity --
   home.username = "maxii";
   home.homeDirectory = "/home/maxii";
-
-  # HM 25.11 requires this; it also pins the module-system version used for
-  # option migrations. Bumped from 24.05 to match the installed release.
-  home.stateVersion = "25.11";
-
-  # In standalone mode the backup flag is a CLI option, not a config option:
-#   home-manager switch -b backup
-# It moves any file a module would clobber to <name>.backup before writing.
+  home.stateVersion = "26.05";
 
   # ------------------------------------------------------------- packages --
-  # Packages installed into the user profile (nix-env default path).
-  # GUI/GL apps intentionally NOT here: Nix-built GL binaries cannot
-  # initialize EGL against the system Mesa/AMD drivers on non-NixOS (verified:
-  # `kitty` from the nix store errors with "EGL: Failed to initialize EGL"). It stays on pacman,
-  # where it uses the system driver stack. See the home.packages comment
-  # above for the same reason GUI/GL apps are excluded.
   home.packages = with pkgs; [
-    # --- core utils ---
-    lsd
-    bat
-    eza
-    fd
-    fzf
-    ripgrep
-    jq
-    yq-go
-    zoxide
-    # --- shell ---
-    atuin
-    direnv
-    zsh
-    fish
-    nushell
-    bash-completion
-    # --- editors ---
+    kitty
     neovim
-    helix
-    micro
-    # --- dev tooling ---
+    kdePackages.kate
+
+    # Neovim + what LazyVim plugins shell out to.
+    # git: lazy.nvim/mason | gcc+gnumake: treesitter | ripgrep/fd: telescope
+    # unzip: mason | nodejs: LSP servers | tree-sitter: CLI
     git
-    gh
-    lazygit
-    gitui
-    nodejs
-    bun
-    python3
-    uv
-    pipx
-    rustup
-    go
-    clang
-    cmake
-    pkg-config
-    ninja
-    meson
-    just
+    ripgrep
+    fd
+    gcc
     gnumake
-    shellcheck
-    shfmt
-    # --- formatters ---
-    nixfmt
-    alejandra
-    taplo
-    stylua
-    biome
-    prettier
-    sd
-    # --- misc ---
-    bottom
-    btop
-    dust
-    procs
-    htop
-    fastfetch
-    hyfetch
-    tree
-    wget
-    curl
     unzip
-    p7zip
-    zip
-    tmux
-    zellij
-    tokei
-    hyperfine
-    tealdeer
-    glow
-    cht-sh
-    doggo
-    xh
-    httpie
-    delta
-    difftastic
-    rsync
-    openssl
-    age
-    sops
-    gnupg
-    pinentry-curses
-    pciutils
-    usbutils
-    lsof
-    killall
-    ncdu
-    dua
-    yt-dlp
-    ffmpeg-full
-    ffmpegthumbnailer
-    imagemagick
-    yazi
-    duf
-    cbonsai
-    cmatrix
-    glances
-    hwinfo
-    strace
-    pv
-    less
-    nano
-    playerctl
-    brightnessctl
-    wl-clipboard
-    cliphist
-    grim
-    slurp
-    poppler-utils
-    tesseract
-    lshw
-    dmidecode
-    file
-    which
-    wdiff
-    colordiff
-    icdiff
+    nodejs
+    tree-sitter
   ];
 
-  # ------------------------------------------------- home.file / programs --
-  # programs.*.enable = true modules write their own config files.
-  # home.file.<path>.source copies a file into $HOME verbatim.
+  # ----------------------------------------------------------------- config --
+  xdg.configFile."kitty/kitty.conf".source = ./files/kitty.conf;
 
-  programs.home-manager.enable = true;
-  programs.direnv.enable = true;
-  programs.direnv.nix-direnv.enable = true;
-  programs.atuin.enable = true;
-  programs.zoxide.enable = true;
-  programs.fzf.enable = true;
-  programs.bat.enable = true;
-  programs.eza.enable = true;
+  # The TOML ships verbatim: programs.starship.settings re-serializes it and
+  # mangles the format strings (verified on C3PO).
+  home.file.".config/starship.toml".source = ./files/starship.toml;
 
-  # Starship TOML config - written directly to preserve TOML syntax
-  # (programs.starship.settings JSON-to-TOML conversion double-escapes format strings)
-  home.file.".config/starship.toml".text = ''
-    # Generated: Tokyo Night theme - catppuccin-style transition wedges
-    # Segments: session / path / git / node / time (left), aws (right)
-    # Minor differences vs OMP:
-    #  - git stash count / ahead-behind symbols sit outside the branch parens
-    #  - at $HOME the directory shows "~" instead of the home folder name
-    #  - node shows the  (engine) icon instead of the package-manager icon
-
-    format = """
-    [](#82aaff)\
-    $username\
-    [](#82aaff bg:#bb9af7)\
-    $directory\
-    [](#bb9af7 bg:#9ece6a)\
-    $git_branch\
-    $git_status\
-    [](#9ece6a bg:#9ece6a)\
-    $nodejs\
-    [](#9ece6a bg:#f7768e)\
-    $time\
-    [ ](#f7768e)\
-    """
-
-    right_format = '$aws'
-
-    [aws]
-    format = '[❯](#1a1b26)[ $symbol$profile(@$region) ]($style)[❯](#1a1b26)'
-    symbol = ""
-    style = "bg:#1a1b26 fg:#82aaff"
-
-    [username]
-    show_always = true
-    format = "[$user ]($style)"
-    style_user = "bg:#82aaff fg:#1a1b26"
-    style_root = "bg:#82aaff fg:#1a1b26"
-
-    [directory]
-    format = "[ $path ]($style)"
-    style = "bg:#bb9af7 fg:#1a1b26"
-    truncation_length = 1
-    truncation_symbol = ""
-    truncate_to_repo = false
-
-    [git_branch]
-    symbol = ""
-    format = "[  ($branch) ]($style)"
-    style = "bg:#bb9af7 fg:#1a1b26"
-
-    [git_status]
-    style = "bg:#bb9af7 fg:#1a1b26"
-    format = "[( $stashed$ahead_behind)]($style)"
-    stashed = "$count"
-    ahead = "↑"
-    behind = "↓"
-    diverged = "⇕"
-    up_to_date = ""
-    conflicted = ""
-    untracked = ""
-    modified = ""
-    staged = ""
-    renamed = ""
-    deleted = ""
-    ignore_submodules = false
-
-    [nodejs]
-    symbol = ""
-    format = "[ $symbol 7.2.10-1-cachyos ]($style)"
-    style = "bg:#9ece6a fg:#1a1b26"
-
-    [time]
-    disabled = false
-    format = "[ ♥ $time ]($style)"
-    time_format = "%R"
-    style = "bg:#f7768e fg:#1a1b26"
+  # LazyVim rewrites lazy-lock.json inside the config dir, so it cannot be a
+  # read-only store symlink; copy the tree in on every activation instead.
+  home.activation.nvimConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run mkdir -p "$HOME/.config/nvim"
+    run ${pkgs.rsync}/bin/rsync -a --delete ${./files/nvim}/ "$HOME/.config/nvim/"
   '';
 
-  # Enable starship for fish shells
-  programs.starship.enable = true;
-  programs.starship.enableFishIntegration = true;
+  # ---------------------------------------------------------------- plasma --
+  # Ctrl+Alt+T -> kitty. KGlobalAccel only picks up .desktop files that opt in
+  # as command shortcuts, hence the flag; the section is [services][<file>].
+  # (home.file, not xdg.desktopEntries: that option throws "extraConfig removed"
+  # on home-manager 26.05.)
+  home.file.".local/share/applications/kitty-terminal.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=Kitty Terminal
+    Exec=${pkgs.kitty}/bin/kitty
+    NoDisplay=true
+    StartupNotify=false
+    X-KDE-GlobalAccel-CommandShortcut=true
+  '';
 
-  # Kitty is NOT here. Nixpkgs' kitty fails EGL initialization against the
-  # system Mesa/AMD drivers on non-NixOS (verified: `kitty` from the nix
-  # store errors with "EGL: Failed to initialize EGL"). It stays on pacman,
-  # where it uses the system driver stack. See the home.packages comment
-  # above for the same reason GUI/GL apps are excluded.
+  programs.plasma = {
+    enable = true;
+    shortcuts = {
+      "services/kitty-terminal.desktop"._launch = "Ctrl+Alt+T";
+      "services/org.kde.konsole.desktop"._launch = [ ];
+    };
+  };
 }
