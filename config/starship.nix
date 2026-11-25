@@ -1,24 +1,6 @@
-{ lib, ... }:
+{ ... }:
 
 {
-  programs.fish = {
-    enable = true;
-    interactiveShellInit = lib.fileContents ../../config/fish/config.fish;
-  };
-  xdg.configFile."fish/conf.d/ssh-agent.fish".source = ../../config/fish/conf.d/ssh-agent.fish;
-  xdg.configFile."fish/completions".source = ../../config/fish/completions;
-
-  programs.atuin.enable = true;
-  programs.zoxide.enable = true;
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-  };
-  services.ssh-agent.enable = true;
-
-  # config.fish already runs `starship init fish`.
-  programs.starship.enableFishIntegration = false;
-
   # Serialized by home-manager into ~/.config/starship.toml.
   # Tokyo Night Moon: each segment is a solid block and the  wedges carry the
   # neighbouring background, so the slant reads as a transition.

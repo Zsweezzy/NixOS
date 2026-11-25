@@ -49,7 +49,7 @@ Plasma 6).
 | `coolercontrol` daemon | no NixOS module; run the package as a systemd service on c3po |
 | `nct6687d-dkms-git` | out-of-tree sensor module for the motherboard |
 | `opencl-mesa` / `vulkan-radeon` / `lib32-*` | `mesa` covers the VM; c3po needs `hardware.graphics` with ROCm/Vulkan |
-| btrfs subvolumes, GRUB-on-btrfs snapshots, Secure Boot | `hosts/c3po` with its own `hardware-configuration.nix` and `boot.loader` |
+| btrfs subvolumes, GRUB-on-btrfs snapshots, Secure Boot | a separate `hardware-configuration.nix` + `nixosConfigurations` entry, with its own `boot.loader` |
 | `nordvpn` / `nordvpn-gui` | unfree, no nixpkgs package; `services.tailscale` is wired up instead |
 
 ## App config that is not declarative yet
