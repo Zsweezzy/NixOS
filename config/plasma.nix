@@ -28,10 +28,13 @@
     papirus-icon-theme
   ];
 
-  # The exact GTK theme from C3PO (~/.local/share/themes), not the nixpkgs
-  # Tokyonight-Dark, so GTK apps match the Plasma palette.
-  home.file.".local/share/themes/Tokyonight-Dark-Moon".source =
-    ./gtk/themes/Tokyonight-Dark-Moon;
+  # The exact themes from C3PO (~/.local/share/{themes,icons}), not the nixpkgs
+  # variants, so GTK/Qt apps match the Plasma palette and icon set.
+  home.file = {
+    ".local/share/themes/Tokyonight-Dark-Moon".source = ./gtk/themes/Tokyonight-Dark-Moon;
+    # YAMIS inherits Papirus-Dark, so papirus-icon-theme stays installed.
+    ".local/share/icons/YAMIS".source = ./icons/YAMIS;
+  };
 
   # GTK apps follow the same palette; Plasma drives the Qt side.
   gtk = {
@@ -41,7 +44,7 @@
       size = 10;
     };
     theme.name = "Tokyonight-Dark-Moon";
-    iconTheme.name = "Papirus-Dark";
+    iconTheme.name = "YAMIS";
     cursorTheme = {
       name = "Bibata-Modern-Classic";
       size = 22;
@@ -62,7 +65,7 @@
     workspace = {
       colorScheme = "TokyoNightMoon";
       theme = "Monochrome";
-      iconTheme = "Papirus-Dark";
+      iconTheme = "YAMIS";
       cursor = {
         theme = "Bibata-Modern-Classic";
         size = 22;
