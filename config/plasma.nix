@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   # Theme assets live next to this file; home-manager links them into the
@@ -52,6 +52,13 @@
     gtk3.extraConfig."gtk-decoration-layout" = "icon:minimize,maximize,close";
     gtk4.extraConfig."gtk-decoration-layout" = "icon:minimize,maximize,close";
   };
+
+  # Plasma's kded GTK bridge rewrites these at runtime, replacing the store
+  # symlink with a regular file. Without force the next activation tries to
+  # back it up and fails on the .backup left by the previous one.
+  home.file."${config.home.homeDirectory}/.gtkrc-2.0".force = lib.mkForce true;
+  xdg.configFile."gtk-3.0/settings.ini".force = lib.mkForce true;
+  xdg.configFile."gtk-4.0/settings.ini".force = lib.mkForce true;
 
   qt = {
     enable = true;
